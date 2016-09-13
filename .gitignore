@@ -1,4 +1,5 @@
 data/
+virtpy/
 config.sh
 *.swp
 *.pyc

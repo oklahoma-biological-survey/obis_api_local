@@ -42,11 +42,11 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        #'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-        'catalog.permission.DjangoMongoPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        #'catalog.permission.DjangoMongoPermissionsOrAnonReadOnly'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
@@ -58,6 +58,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONPRenderer',
         'rest_framework.renderers.XMLRenderer',
         'rest_framework.renderers.YAMLRenderer',
+        'rest_framework_csv.renderers.CSVRenderer',
         #'data_layer.pagination.PaginatedCSVRenderer',
         #'drf_ujson.renderers.UJSONRenderer',
 
@@ -84,7 +85,8 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'cybercom_queue',
     'catalog',
-    'data_store'
+    'data_store',
+    'obis'
 
 )
 
@@ -111,8 +113,19 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    },
+    'obis':{
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'HOST': 'localhost',
+        'NAME': 'o_master',
+        #'USER': username,
+        #'PASSWORD': password,
+    },
 }
+
+#from database_router import PurpleRouter
+DATABASE_ROUTERS = ['api.database_router.obisRouter',]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.6/topics/i18n/
