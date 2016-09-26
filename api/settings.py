@@ -117,6 +117,7 @@ DATABASES = {
     'obis':{
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'HOST': 'localhost',
+        #'HOST':'172.17.0.1',
         'NAME': 'o_master',
         #'USER': username,
         #'PASSWORD': password,
