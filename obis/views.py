@@ -4,10 +4,20 @@ from rest_framework import viewsets, filters, serializers
 from rest_framework.renderers import BrowsableAPIRenderer, JSONPRenderer,JSONRenderer,XMLRenderer,YAMLRenderer #, filters
 from rest_framework_csv.renderers import CSVRenderer
 #from renderer import CustomBrowsableAPIRenderer
-from obis.filters import AcctaxFilter
-from obis.models import Acctax, Comtax, Syntax 
-from serializer import AcctaxSerializer
+from obis.filters import AcctaxFilter,ComtaxFilter,SearchViewFilter
+from obis.models import Acctax, Comtax, Syntax, SearchView 
+from serializer import AcctaxSerializer,ComtaxSerializer
 
+class SearchViewSet(viewsets.ReadOnlyModelViewSet):
+    model = SearchView
+    queryset = SearchView.objects.all()
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer,JSONPRenderer,XMLRenderer,YAMLRenderer,CSVRenderer)
+    filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,filters.OrderingFilter)
+    filter_class = SearchViewFilter
+    search_fields =('acode','sname','scientificnameauthorship','kingdom','phylum','taxclass','taxorder','family','genus','species','subspecies','variety','forma',
+                    'elcode','gelcode','iunccode','g_rank','s_rank','nativity','source','vernacularname')
+    ordering_fields = ('acode','sname','scientificnameauthorship','kingdom','phylum','taxclass','taxorder','family','genus','species','subspecies','variety','forma',
+                    'elcode','gelcode','iunccode','g_rank','s_rank','nativity','source','vernacularname')    
 
 class AcctaxViewSet(viewsets.ModelViewSet):
     """
@@ -21,7 +31,7 @@ class AcctaxViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,filters.OrderingFilter)
     filter_class = AcctaxFilter
     search_fields =('acode','sname','scientificnameauthorship','kingdom','phylum','taxclass','taxorder','family','genus','species','subspecies','variety','forma',
-                    'elcode','gelcode','iunccode','g_rank','s_rank','nativity','source')
+                    'elcode','gelcode','iunccode','g_rank','s_rank','nativity','source','comtax__vernacularname')
     ordering_fields = ('acode','sname','scientificnameauthorship','kingdom','phylum','taxclass','taxorder','family','genus','species','subspecies','variety','forma',
                     'elcode','gelcode','iunccode','g_rank','s_rank','nativity','source')
 
@@ -32,9 +42,15 @@ class ComtaxViewSet(viewsets.ModelViewSet):
     """
     model = Comtax
     queryset = Comtax.objects.all()
-    #serializer_class = serializers.HyperlinkedModelSerializer
+    serializer_class =  ComtaxSerializer #serializers.HyperlinkedModelSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer,JSONPRenderer,XMLRenderer,YAMLRenderer)
     filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,filters.OrderingFilter)
+    filter_class = ComtaxFilter
+    search_fields = ('acode','vernacularname',)
+
+#'acctax__scientificnameauthorship','acctax__kingdom','acctax__phylum','acctax__taxclass',
+#                    'acctax__taxorder','acctax__family','acctax__genus','acctax__species','acctax__subspecies','acctax__variety','acctax__forma',
+#                    'acctax__elcode','acctax__iunccode','acctax__g_rank','acctax__s_rank','acctax__nativity','acctax__source')
 
 class SyntaxViewSet(viewsets.ModelViewSet):
     """
@@ -46,7 +62,7 @@ class SyntaxViewSet(viewsets.ModelViewSet):
     #serializer_class = serializers.HyperlinkedModelSerializer
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer,JSONPRenderer,XMLRenderer,YAMLRenderer)
     filter_backends = (filters.DjangoFilterBackend, filters.SearchFilter,filters.OrderingFilter)
-
+    #search_fields = ('acode','sname','scientificnameauthorship','family','genus','species','subspecies','variety')
 #class LuSourceViewSet(viewsets.ModelViewSet):
 #    model = LuSource
 #    queryset = LuSource.objects.all() #.using('purple').all()

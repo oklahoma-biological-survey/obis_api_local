@@ -3,11 +3,31 @@ from rest_framework import serializers
 from models import Acctax, Comtax, Syntax
 
 class AcctaxSerializer(serializers.HyperlinkedModelSerializer):
+    #comtax = ComtaxSerializer(source='Comtax',read_only=True,many=True)
+
     class Meta:
         model = Acctax
         fields = ['url','acode','sname','scientificnameauthorship','kingdom','phylum','taxclass','taxorder','family','genus','species','subspecies','variety','forma',
                     'elcode','gelcode','iunccode','g_rank','s_rank','nativity','source']
 
+
+class ComtaxSerializer(serializers.HyperlinkedModelSerializer): #ModelSerializer):
+    #acodes = AcctaxSerializer(read_only=True,many=True)
+    class Meta:
+        #depth=1
+        model= Comtax
+        fields =['url','acode','vernacularname']
+
+
+"""
+class AcctaxSerializer(serializers.HyperlinkedModelSerializer):
+    #comtax = ComtaxSerializer(source='Comtax',read_only=True,many=True)
+
+    class Meta:
+        model = Acctax
+        fields = ['url','acode','sname','scientificnameauthorship','kingdom','phylum','taxclass','taxorder','family','genus','species','subspecies','variety','forma',
+                    'elcode','gelcode','iunccode','g_rank','s_rank','nativity','source']
+"""
 #class CarSerializer(ModelSerializer):
 #    producer= ProducerSerializer(read_only=True)
 #
